@@ -1,9 +1,10 @@
-let displayValue = document.querySelector('#display-section span')
+let displayValue = document.querySelector('#current-input')
 
 const buttons = document.querySelectorAll('.input-btn');
 buttons.forEach(button => {
     button.addEventListener('click', () => {
-        displayValue.textContent += button.textContent
+        if (displayValue.textContent.length < 19)
+            displayValue.textContent += button.textContent
         if (displayValue.textContent[0] == '0')
             displayValue.textContent = displayValue.textContent.substring(1, displayValue.textContent.length)
     })
@@ -14,6 +15,8 @@ const addButton = document.querySelector('#add-btn')
 const subtractButton = document.querySelector('#subtract-btn')
 const multiplyButton = document.querySelector('#multiply-btn')
 const divideButton = document.querySelector('#divide-btn')
+const oppositeButton = document.querySelector('#opposite-btn')
+const squareRootButton = document.querySelector('#root-btn')
 const deleteButton = document.querySelector('#delete-btn')
 const clearButton = document.querySelector('#clear-btn')
 const equalsButton = document.querySelector('#equals-btn')
@@ -21,6 +24,14 @@ const equalsButton = document.querySelector('#equals-btn')
 let currentOperation = '';
 let firstValue = 0
 let secondValue = 0
+
+oppositeButton.addEventListener('click', () => {
+    displayValue.textContent = opposite(displayValue.textContent)
+})
+
+squareRootButton.addEventListener('click', () => {
+    displayValue.textContent = squareRoot(displayValue.textContent)
+})
 
 deleteButton.addEventListener('click', () => {
     if (displayValue.textContent.length == 1) {
@@ -30,37 +41,17 @@ deleteButton.addEventListener('click', () => {
     displayValue.textContent = displayValue.textContent.substring(0, displayValue.textContent.length - 1)
 })
 
-clearButton.addEventListener('click', () => {
-    displayValue.textContent = '0'
-})
+clearButton.addEventListener('click', clearAll)
 
-addButton.addEventListener('click', () => {
-    firstValue = displayValue.textContent
-    displayValue.textContent = '0'
-    currentOperation = 'addition'
-})
+const previousInputs = document.querySelector('#previous-inputs')
 
-subtractButton.addEventListener('click', () => {
-    firstValue = displayValue.textContent
-    displayValue.textContent = '0'
-    currentOperation = 'subtraction'
-})
+firstValue = getInput()
 
-multiplyButton.addEventListener('click', () => {
-    firstValue = displayValue.textContent
-    displayValue.textContent = '0'
-    currentOperation = 'multiplication'
-})
-
-divideButton.addEventListener('click', () => {
-    firstValue = displayValue.textContent
-    displayValue.textContent = '0'
-    currentOperation = 'division'
-})
-
-
-equalsButton.addEventListener('click', () =>
-    operate(firstValue, displayValue.textContent, currentOperation))
+equalsButton.addEventListener('click', () => {
+    secondValue = Number(displayValue.textContent);
+    operate(firstValue, secondValue, currentOperation);
+    secondValue = null;
+});
 
 function add(a,b) {
     return Number(a) + Number(b);
@@ -75,20 +66,72 @@ function multiply(a,b) {
 }
 
 function divide(a,b) {
-    return Number(a) / Number(b);
+    return Number(b) != 0 ? Number(a) / Number(b) : 'why';
 }
 
-function operate (firstNumber, secondNumber, operation) {
-    if (currentOperation === 'addition') {
-        displayValue.textContent = add(firstValue, displayValue.textContent)
+function opposite(a) {
+    return Number(a) * -1;
+}
+
+function squareRoot(a) {
+    return Math.sqrt(Number(a));
+}
+
+function clear() {
+    displayValue.textContent = '0'
+}
+
+function clearAll() {
+    displayValue.textContent = '0'
+    previousInputs.innerHTML = ""
+}
+
+function operate (firstValue, secondValue, operation) {
+    if (operation === 'addition') {
+        displayValue.textContent = add(firstValue, secondValue)
     }
-    else if (currentOperation === 'subtraction') {
-        displayValue.textContent = subtract(firstValue, displayValue.textContent)
+    else if (operation === 'subtraction') {
+        displayValue.textContent = subtract(firstValue, secondValue)
     }
-    else if (currentOperation === 'multiplication') {
-        displayValue.textContent = multiply(firstValue, displayValue.textContent)
+    else if (operation === 'multiplication') {
+        displayValue.textContent = multiply(firstValue, secondValue)
     }
-    else if (currentOperation === 'division') {
-        displayValue.textContent = divide(firstValue, displayValue.textContent)
+    else if (operation === 'division') {
+        if (secondValue == 0)
+            previousInputs.innerHTML = ''
+        displayValue.textContent = divide(firstValue, secondValue)
     }
 }
+
+function getInput() {
+    addButton.addEventListener('click', () => {
+        firstValue = displayValue.textContent
+        previousInputs.textContent = `${firstValue} +`
+        clear()
+        currentOperation = 'addition'
+    })
+    
+    subtractButton.addEventListener('click', () => {
+        firstValue = displayValue.textContent
+        previousInputs.textContent = `${firstValue} -`
+        clear()
+        currentOperation = 'subtraction'
+    })
+    
+    multiplyButton.addEventListener('click', () => {
+        firstValue = displayValue.textContent
+        previousInputs.textContent = `${firstValue} *`
+        clear()
+        currentOperation = 'multiplication'
+    })
+    
+    divideButton.addEventListener('click', () => {
+        firstValue = displayValue.textContent
+        previousInputs.textContent = `${firstValue} /`
+        clear()
+        currentOperation = 'division'
+    })
+    return firstValue
+}
+
+
