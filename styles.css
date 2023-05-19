@@ -70,3 +70,13 @@ body {
     color: #e2b714;
     transition: ease-in-out 0.05s;
 }
+
+@media screen and (max-width: 320px) {
+    body {
+        transform: scale(0.8);
+    }
+    
+    .btn {
+        padding: 8px;
+    }
+}
