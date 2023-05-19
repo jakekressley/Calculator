@@ -50,7 +50,6 @@ firstValue = getInput()
 equalsButton.addEventListener('click', () => {
     secondValue = Number(displayValue.textContent);
     operate(firstValue, secondValue, currentOperation);
-    secondValue = null;
 });
 
 function add(a,b) {
@@ -79,6 +78,7 @@ function squareRoot(a) {
 
 function clear() {
     displayValue.textContent = '0'
+    currentOperation = ''
 }
 
 function clearAll() {
@@ -101,10 +101,12 @@ function operate (firstValue, secondValue, operation) {
             previousInputs.innerHTML = ''
         displayValue.textContent = divide(firstValue, secondValue)
     }
+    previousInputs.textContent += secondValue
 }
 
 function getInput() {
     addButton.addEventListener('click', () => {
+        operate(firstValue, Number(displayValue.textContent), currentOperation)
         firstValue = displayValue.textContent
         previousInputs.textContent = `${firstValue} +`
         clear()
@@ -112,6 +114,7 @@ function getInput() {
     })
     
     subtractButton.addEventListener('click', () => {
+        operate(firstValue, Number(displayValue.textContent), currentOperation)
         firstValue = displayValue.textContent
         previousInputs.textContent = `${firstValue} -`
         clear()
@@ -119,6 +122,7 @@ function getInput() {
     })
     
     multiplyButton.addEventListener('click', () => {
+        operate(firstValue, Number(displayValue.textContent), currentOperation)
         firstValue = displayValue.textContent
         previousInputs.textContent = `${firstValue} *`
         clear()
@@ -126,6 +130,7 @@ function getInput() {
     })
     
     divideButton.addEventListener('click', () => {
+        operate(firstValue, Number(displayValue.textContent), currentOperation)
         firstValue = displayValue.textContent
         previousInputs.textContent = `${firstValue} /`
         clear()
