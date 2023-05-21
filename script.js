@@ -50,6 +50,7 @@ firstValue = getInput()
 equalsButton.addEventListener('click', () => {
     secondValue = Number(displayValue.textContent);
     operate(firstValue, secondValue, currentOperation);
+    previousInputs.textContent = ''
 });
 
 function add(a,b) {
@@ -106,8 +107,22 @@ function operate (firstValue, secondValue, operation) {
 
 function getInput() {
     addButton.addEventListener('click', () => {
-        firstValue = displayValue.textContent
+        displayValue.value = Number(displayValue.textContent)
+        firstValue = displayValue.value
+
+        if (false) {
+            currentOperation = 'addition'
+            console.log("firstValue: " + firstValue)
+            console.log("previousInputs.value: " + previousInputs.value)
+            console.log("current operation: " + currentOperation)
+            operate(firstValue, previousInputs.value, currentOperation)
+            previousInputs.textContent = ''
+            return
+        }
+
         previousInputs.textContent = `${firstValue} +`
+        previousInputs.value = firstValue
+        console.log(previousInputs.value);
         clear()
         currentOperation = 'addition'
     })
